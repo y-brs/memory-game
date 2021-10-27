@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import SingleCard from './components/SingleCard';
+import { useEffect, useState } from 'react'
+import SingleCard from './components/SingleCard'
 
-import './App.css';
+import './App.css'
 
 const cardImages = [
   { "src": "/images/helmet-1.png", matched: false },
@@ -33,7 +33,6 @@ function App() {
 
   // handle a choice
   const handleChoice = (card) => {
-    console.log(card)
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
   }
 
@@ -92,7 +91,7 @@ function App() {
 
       <p>Turns: {turns}</p>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
