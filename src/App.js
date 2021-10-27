@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SingleCard from './components/SingleCard';
 
 import './App.css';
@@ -15,18 +15,55 @@ const cardImages = [
 function App() {
   const [cards, setCards] = useState([])
   const [turns, setTurns] = useState(0)
+  const [choiceOne, setChoiceOne] = useState(null)
+  const [choiceTwo, setChoiceTwo] = useState(null)
 
-  // shuffle card
+  // shuffle card for new game
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
-      .map((card) => ({ ...card, id: Math.random() }))
+      .map(card => ({ ...card, id: Math.random() }))
 
     setCards(shuffledCards)
     setTurns(0)
   }
 
-  console.log(cards, turns)
+  console.log(cards)
+
+  // handle a choice
+  const handleChoice = (card) => {
+    console.log(card)
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
+  }
+
+  // compare 2 selected cards
+  useEffect(() => {
+    if (choiceOne && choiceTwo) {
+
+      if (choiceOne.src === choiceTwo.src) {
+        setCards(prevCards => {
+          return prevCards.map(card => {
+            if (card.src === choiceOne.src) {
+              return { ...card, matched: true }
+            } else {
+              return card
+            }
+          })
+        })
+        resetTurn()
+      } else {
+        setTimeout(() => resetTurn(), 1000)
+      }
+
+    }
+  }, [choiceOne, choiceTwo])
+
+  // reset choices & increase turn
+  const resetTurn = () => {
+    setChoiceOne(null)
+    setChoiceTwo(null)
+    setTurns(prevTurns => prevTurns + 1)
+  }
 
   return (
     <div className="App">
@@ -38,6 +75,8 @@ function App() {
           <SingleCard
             key={card.id}
             card={card}
+            handleChoice={handleChoice}
+            flipped={card === choiceOne || card === choiceTwo || card.matched}
           />
         ))}
       </div>
